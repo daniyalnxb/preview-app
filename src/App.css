@@ -1,0 +1,75 @@
+.app {
+  width: 100dvw;
+  height: 100dvh;
+  padding: 10px;
+  background-color: blueviolet;
+}
+
+.editdors-container {
+  display: flex;
+  align-items: flex-start;
+  height: 50vh;
+  overflow-x: hidden;
+}
+
+.editor-container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
+.editor {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+
+.resizing {
+  pointer-events: none;
+}
+
+.resizable-editor {
+  height: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+/* .resizeable {
+  width: 100%;
+  height: 100%;
+} */
+
+.custom-handle {
+  width: 10px;
+  cursor: ew-resize;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.handle-line {
+  width: 2px;
+  height: 100%;
+  background-color: #fece2f;
+}
+
+.preview-container {
+  flex: 1;
+  background: white;
+  padding: 10px;
+  height: calc(50dvh - 20px);
+}
+
+.preview-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
