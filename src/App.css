@@ -3,6 +3,23 @@
   height: 100dvh;
   padding: 10px;
   background-color: blueviolet;
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  button {
+    outline: none;
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 8px;
+    color: black;
+    cursor: pointer;
+  }
 }
 
 .editdors-container {

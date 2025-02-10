@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Editor from "@monaco-editor/react";
+import html2canvas from "html2canvas";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 
@@ -45,9 +46,73 @@ export default function LiveCodeEditor() {
     `;
   };
 
+  const handleExportAsPng = async () => {
+    const iframe = document.getElementById("preview");
+    
+    if (iframe && iframe.contentDocument) {
+      // Create a temporary container to render the preview outside the iframe
+      const tempContainer = document.createElement("div");
+      tempContainer.style.position = "absolute";
+      tempContainer.style.left = "-9999px"; // Hide it off-screen
+      tempContainer.innerHTML = iframe.contentDocument.documentElement.innerHTML;
+      document.body.appendChild(tempContainer);
+  
+      // Capture the content
+      const canvas = await html2canvas(tempContainer, { useCORS: true });
+      document.body.removeChild(tempContainer); // Cleanup
+  
+      // Download the captured image
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "preview.png";
+      link.click();
+    }
+  };
+
+  const handleExportAsSVG = () => {
+    const iframe = document.getElementById("preview");
+  
+    if (iframe && iframe.contentDocument) {
+      const htmlContent = iframe.contentDocument.body.innerHTML;
+      const cssContent = Array.from(iframe.contentDocument.styleSheets)
+        .map((sheet) => {
+          try {
+            return Array.from(sheet.cssRules)
+              .map((rule) => rule.cssText)
+              .join("\n");
+          } catch (e) {
+            return "";
+          }
+        })
+        .join("\n");
+  
+      // Create an SVG template
+      const svgContent = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+          <foreignObject width="100%" height="100%">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              <style>${cssContent}</style>
+              ${htmlContent}
+            </div>
+          </foreignObject>
+        </svg>`;
+  
+      // Convert to Blob and trigger download
+      const blob = new Blob([svgContent], { type: "image/svg+xml" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "preview.svg";
+      link.click();
+    }
+  };
+
   return (
     <div className="app">
       {/* Code Editors */}
+      <div className="header">
+        <button onClick={handleExportAsPng}>Export as PNG</button>
+        <button onClick={handleExportAsSVG}>Export as SVG</button>
+      </div>
       <div className="editdors-container">
         <ResizableBox
           width={inititalWidth} // Initial width
@@ -89,6 +154,7 @@ export default function LiveCodeEditor() {
       {/* Live Preview */}
       <div className="preview-container">
         <iframe
+          id="preview"
           className="preview-frame"
           srcDoc={generatePreview()}
         />
